@@ -14,21 +14,10 @@
 			<input class="sdpi-item-value" type="text" id="replaceInput" name="replaceInput" value="" placeholder="\$([A-Z]+)" onchange="sendValueToPlugin(event.target.value, 'replaceInput')">
 		</div>
 
-<!--		<div class="sdpi-item" id="with-wrapper">-->
-<!--			<div class="sdpi-item-label">Replace</div>-->
-<!--			<input class="sdpi-item-value" type="text" id="withInput" name="withInput" value="" placeholder="" onchange="sendValueToPlugin(event.target.value, 'withInput')">-->
-<!--		</div>-->
-
 		<div class="sdpi-item" id="your_name_required" title="$1..$9, indicate the results of the corresponding matching parentheses in the regular expression pattern.">
 			<div class="sdpi-item-label">Replace</div>
 			<input class="sdpi-item-value" id="selectionTextInput" name="selectionTextInput" value="" placeholder="https://tradingview.com/symbols/$1" required onchange="sendValueToPlugin(event.target.value, 'selectionTextInput')">
 		</div>
-
-<!--		<div class="sdpi-item">-->
-<!--			<details class="message info">-->
-<!--				<summary>Required Fields</summary>-->
-<!--			</details>-->
-<!--		</div>-->
 
 		<details>
 			<summary>License</summary>
@@ -37,53 +26,7 @@
 		</details>
 	</div>
 
-	<!--script src="js/index_pi.js"></script-->
-	<script>
-		// this is our global websocket, used to communicate from/to Stream Deck software
-		// and some info about our plugin, as sent by Stream Deck software
-		var websocket = null,
-			uuid = null,
-			actionInfo = {};
-
-		function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
-			uuid = inUUID;
-			// please note: the incoming arguments are of type STRING, so
-			// in case of the inActionInfo, we must parse it into JSON first
-			actionInfo = JSON.parse(inActionInfo); // cache the info
-			websocket = new WebSocket('ws://localhost:' + inPort);
-
-			// if connection was established, the websocket sends
-			// an 'onopen' event, where we need to register our PI
-			websocket.onopen = function () {
-				var json = {
-					event:  inRegisterEvent,
-					uuid:   inUUID
-				};
-				// register property inspector to Stream Deck
-				websocket.send(JSON.stringify(json));
-			}
-		}
-
-		// Passes values to the plugin
-		function sendValueToPlugin(value, param) {
-			let results = { 'sdpi_collection': true }
-			const arrElements = document.querySelectorAll('.sdpi-item-value');
-
-			arrElements.forEach((e,i) => {
-				results[e.name] = e.value;
-			});
-
-			if (websocket) {
-				const json = {
-					"action": actionInfo['action'],
-					"event": "sendToPlugin",
-					"context": uuid,
-					"payload": results
-				};
-				websocket.send(JSON.stringify(json));
-			}
-		}
-	</script>
+	<script src="js/index_pi.js"></script>
 </body>
 
 </html>
